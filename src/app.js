@@ -17,7 +17,9 @@ const indexRoutes = require( './routes/index' );
 //define puerto predefindo por el SO o 3000
 app.set( 'port', process.env.PORT || 3000 );
 app.set( 'views', path.join( __dirname, 'views' ) );
-app.set( 'view engine', 'ejs' );
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+//app.set( 'view engine', 'html' );
 
 //middlewares
 app.use( morgan( 'dev' ) );
