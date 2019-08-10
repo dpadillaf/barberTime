@@ -2,6 +2,7 @@ const path = require( 'path' );
 const morgan = require( 'morgan' );
 const express = require( 'express' );
 const mongoose = require( 'mongoose' );
+const cors = require( 'cors' );
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use( morgan( 'dev' ) );
 //para recibir formularios y que no sean muy grandes, solo texto.
 app.use( express.urlencoded( { extended: false } ) );
 app.use( express.json() );
+app.use( cors() );
 
 //rutas
 app.use( '/', indexRoutes );

@@ -15,9 +15,11 @@ router.get( '/barberias', async ( req, res ) => {
 
 //Json barberos de idBarberia
 router.get( '/barberos/:idBarberia', async ( req, res ) => {
-    const barberias = await Barberia.find( { _id: idBarberia } );
-    console.log(barberias);
-    res.json( barberias );
+    const { idBarberia } = req.param;
+    console.log( req.param )
+    const barberos = await Barbero.find( { id: idBarberia } );
+    console.log(barberos);
+    res.json( barberos );
 } );
 
 //Json citas de la idBarberia
@@ -42,7 +44,6 @@ router.post( '/addadmin', async ( req, res ) => {
             res.json( { 'msj': 'Usuario agregado con éxito!' } );
         }
      } );
-    
 } );
 
 //agregar barberia
@@ -56,6 +57,14 @@ router.post( '/addbarberia', async ( req, res ) => {
         }
      } );
     
+} );
+
+//agregar servicio a barberia
+router.post( '/addserviciobarberia', async ( req, res ) => {
+    const { servicio } = req.body;
+    const { id } = req.body;
+    await Barberia.update(  { _id: id }, { $push: { servicios: servicio } } );
+    res.json( { 'msj': 'Servicio agregado con éxito!' } );
 } );
 
 //agregar cita
@@ -81,7 +90,7 @@ router.post( '/login', async ( req, res ) => {
         if ( isEmptyObject( user ) ){
             Barbero.find( { 'email': email, 'password': password }, ( err2, user2 ) => {
                 if ( isEmptyObject( user2 ) ){
-                    res.json( { 'msj': 'Email o contraseña incorrectas' } );
+                    res.json( false );
                 }else{
                     res.json( user2 );
                 }
@@ -99,14 +108,14 @@ router.post( '/addbarbero', async ( req, res ) => {
         if ( err ){
             res.send( err );
         }else{
-            res.json( { 'msj': 'Usuario agregado con éxito!' }  );
+            res.json( { 'msj': 'Barbero agregado con éxito!' }  );
         }
     } );
 } );
 
 //borra cita con id
 router.post( '/removebarbero', async ( req, res ) => {
-    const { id } = req.params;
+    const { id } = req.param;
     await Barbero.remove( { _id: id }, ( err ) => {
         if ( err ){
             res.send( err );
@@ -118,14 +127,14 @@ router.post( '/removebarbero', async ( req, res ) => {
 
 //Json con la barberia de id
 router.get( '/barberia/:id', async ( req, res ) => {
-    const { id } = req.params;
-    const barberia = await Barberia.findById( id );
+    const { id } = req.param;
+    const barberia = await Barberia.find( { admin: id } );
     res.json( barberia );
 } );
 
 //atiende una cita con el id
 router.post( '/atendercita', async ( req, res ) => {
-    const { id } = req.params;
+    const { id } = req.param;
     Cita.update( { '_id': id }, { 'estado': true }, function( err ){ 
         if ( err ){
             res.send( err );
@@ -133,6 +142,20 @@ router.post( '/atendercita', async ( req, res ) => {
             res.json( { 'msj': 'Cita atendida!' } );
         }
      } );
+} );
+
+router.get( '/estadisticas/:idBarberia', async ( req, res ) => {
+    let data = [];
+    const barberos = await Barbero.find( { barberia: idBarberia } );
+    await barberos.forEach( ( barbero ) => {
+        let barb = {
+            'nombre': barbero.nombre,
+            '_id': barbero._id,
+            'citasAtendidas': Cita.find( { barbero: barbero._id, estado: true } ).count()
+        }
+        data.push( barb );
+    } );
+    res.json( data );
 } );
 
 module.exports = router;
