@@ -7,7 +7,8 @@ const CitaSchema = new Schema( {
     barberia: String,
     barbero: String,
     estado: Boolean,
-    fecha: Date
+    fecha: Date,
+    turno: Number
 } );
 
 module.exports = mongoose.model( 'citas', CitaSchema );

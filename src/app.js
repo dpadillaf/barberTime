@@ -25,6 +25,7 @@ app.set('view engine', 'html');
 app.use( morgan( 'dev' ) );
 //para recibir formularios y que no sean muy grandes, solo texto.
 app.use( express.urlencoded( { extended: false } ) );
+app.use( express.json() );
 
 //rutas
 app.use( '/', indexRoutes );
