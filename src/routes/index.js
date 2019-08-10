@@ -13,6 +13,13 @@ router.get( '/barberias', async ( req, res ) => {
     res.json( barberias );
 } );
 
+//Json barberos de idBarberia
+router.get( '/barberos/:idBarberia', async ( req, res ) => {
+    const barberias = await Barberia.find( { _id: idBarberia } );
+    console.log(barberias);
+    res.json( barberias );
+} );
+
 //Json citas de la idBarberia
 router.get( '/citas/:idBarberia', async ( req, res ) => {
     const citas = await Cita.find( { barberia: idBarberia } );
@@ -33,6 +40,34 @@ router.post( '/addadmin', async ( req, res ) => {
             res.send( err );
         }else{
             res.json( { 'msj': 'Usuario agregado con éxito!' } );
+        }
+     } );
+    
+} );
+
+//agregar barberia
+router.post( '/addbarberia', async ( req, res ) => {
+    const barberia = new Barberia( req.body );
+    await barberia.save( function( err ){ 
+        if ( err ){
+            res.send( err );
+        }else{
+            res.json( { 'msj': 'Barberia agregada con éxito!' } );
+        }
+     } );
+    
+} );
+
+//agregar cita
+router.post( '/addcita', async ( req, res ) => {
+    const cita = new Cita( req.body );
+    await cita.save( function( err ){ 
+        if ( err ){
+            res.send( err );
+        }else{
+            Cita.find( { nombreCliente: cita.nombreCliente }, ( err, cita ) => {
+            res.json( cita );
+            } );  
         }
      } );
     
@@ -69,6 +104,18 @@ router.post( '/addbarbero', async ( req, res ) => {
     } );
 } );
 
+//borra cita con id
+router.post( '/removebarbero', async ( req, res ) => {
+    const { id } = req.params;
+    await Barbero.remove( { _id: id }, ( err ) => {
+        if ( err ){
+            res.send( err );
+        }else{
+            res.json( { 'msj': 'Barbero borrado con éxito!!' }  );
+        }
+    } );
+} );
+
 //Json con la barberia de id
 router.get( '/barberia/:id', async ( req, res ) => {
     const { id } = req.params;
@@ -76,8 +123,8 @@ router.get( '/barberia/:id', async ( req, res ) => {
     res.json( barberia );
 } );
 
-//atiende una cita PUT con el id
-router.put( '/atendercita', async ( req, res ) => {
+//atiende una cita con el id
+router.post( '/atendercita', async ( req, res ) => {
     const { id } = req.params;
     Cita.update( { '_id': id }, { 'estado': true }, function( err ){ 
         if ( err ){
