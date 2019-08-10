@@ -6,12 +6,26 @@ const Barbero = require( '../models/barbero' );
 const Administrador = require( '../models/administrador' );
 const Cita = require( '../models/cita' );
 
+//Json todas las berberias
 router.get( '/barberias', async ( req, res ) => {
     const barberias = await Barberia.find();
     console.log(barberias);
     res.json( barberias );
 } );
 
+//Json citas de la idBarberia
+router.get( '/citas/:idBarberia', async ( req, res ) => {
+    const citas = await Cita.find( { barberia: idBarberia } );
+    res.json( citas );
+} );
+
+//Json citas de idBarbero
+router.get( '/citas/:idBarbero', async ( req, res ) => {
+    const citas = await Cita.find( { barbero: idBarbero } );
+    res.json( citas );
+} );
+
+//agregar administrador
 router.post( '/addadmin', async ( req, res ) => {
     const administrador = new Administrador( req.body );
     await administrador.save( function( err ){ 
@@ -24,6 +38,7 @@ router.post( '/addadmin', async ( req, res ) => {
     
 } );
 
+//logear sirve para admin y barbero, devuelve lo que corresponde
 router.post( '/login', async ( req, res ) => {
     const { email } = req.body;
     const { password } = req.body;
@@ -42,6 +57,7 @@ router.post( '/login', async ( req, res ) => {
     } );
 } );
 
+//agrega barbero
 router.post( '/addbarbero', async ( req, res ) => {
     const barbero = new Barbero( req.body );
     await barbero.save( function( err ){ 
@@ -53,12 +69,14 @@ router.post( '/addbarbero', async ( req, res ) => {
     } );
 } );
 
+//Json con la barberia de id
 router.get( '/barberia/:id', async ( req, res ) => {
     const { id } = req.params;
     const barberia = await Barberia.findById( id );
     res.json( barberia );
 } );
 
+//atiende una cita PUT con el id
 router.put( '/atendercita', async ( req, res ) => {
     const { id } = req.params;
     Cita.update( { '_id': id }, { 'estado': true }, function( err ){ 
@@ -72,6 +90,7 @@ router.put( '/atendercita', async ( req, res ) => {
 
 module.exports = router;
 
+//comprueba si resultado de consulta es vacío
 function isEmptyObject(obj) {
     return !Object.keys(obj).length;
 }
