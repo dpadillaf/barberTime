@@ -127,7 +127,7 @@ router.post( '/removebarbero', async ( req, res ) => {
 
 //Json con la barberia de id
 router.get( '/barberia/:id', async ( req, res ) => {
-    const { id } = req.param;
+    const { id } = req.params;
     const barberia = await Barberia.find( { admin: id } );
     res.json( barberia );
 } );
@@ -145,17 +145,24 @@ router.post( '/atendercita', async ( req, res ) => {
 } );
 
 router.get( '/estadisticas/:idBarberia', async ( req, res ) => {
-    let data = [];
+    const data = [];
+    let cont = 0;
+    const { idBarberia } = req.params;
     const barberos = await Barbero.find( { barberia: idBarberia } );
-    await barberos.forEach( ( barbero ) => {
-        let barb = {
-            'nombre': barbero.nombre,
-            '_id': barbero._id,
-            'citasAtendidas': Cita.find( { barbero: barbero._id, estado: true } ).count()
-        }
-        data.push( barb );
+    await barberos.map( ( barbero ) => {
+        Cita.find( { barbero: barbero._id, estado: true } ).countDocuments( ( e, num ) => {
+            data.push( {
+                'nombre': barbero.nombre,
+                'id': barbero._id,
+                'citasAtendidas': num
+            } );
+            //console.log( data );
+            //data.push( barb );
+            cont++;
+            if ( cont == barberos.length ) res.json( data );
+        } );
     } );
-    res.json( data );
+    //console.log( prueba );
 } );
 
 module.exports = router;
