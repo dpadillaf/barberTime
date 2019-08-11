@@ -116,7 +116,7 @@ router.post( '/addbarbero', async ( req, res ) => {
 //borra barbero
 router.delete( '/removebarbero', async ( req, res ) => {
     const { id } = req.param;
-    await Barbero.findOneAndDelete( id );
+    await Barbero.findByIdAndDelete( id );
     
 } );
 
