@@ -13,11 +13,19 @@ router.get( '/barberias', async ( req, res ) => {
     res.json( barberias );
 } );
 
+//Json busqueda de berberias
+router.post( '/busqueda', async ( req, res ) => {
+    const { buscar } = req.body;
+    const barberias = await Barberia.find( { nombre: { $regex: buscar } } );
+    console.log(barberias);
+    res.json( barberias );
+} );
+
 //Json barberos de idBarberia
 router.get( '/barberos/:idBarberia', async ( req, res ) => {
     const { idBarberia } = req.param;
     console.log( req.param )
-    const barberos = await Barbero.find( { id: idBarberia } );
+    const barberos = await Barbero.find( { barberia: idBarberia } );
     console.log(barberos);
     res.json( barberos );
 } );
@@ -114,8 +122,8 @@ router.post( '/addbarbero', async ( req, res ) => {
 } );
 
 //borra barbero
-router.delete( '/removebarbero', async ( req, res ) => {
-    const { id } = req.param;
+router.delete( '/removebarbero/:id', async ( req, res ) => {
+    const { id } = req.params;
     await Barbero.findByIdAndDelete( id );
     
 } );
