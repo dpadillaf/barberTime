@@ -113,22 +113,24 @@ router.post( '/addbarbero', async ( req, res ) => {
     } );
 } );
 
-//borra cita con id
-router.post( '/removebarbero', async ( req, res ) => {
+//borra barbero
+router.delete( '/removebarbero', async ( req, res ) => {
     const { id } = req.param;
-    await Barbero.remove( { _id: id }, ( err ) => {
-        if ( err ){
-            res.send( err );
-        }else{
-            res.json( { 'msj': 'Barbero borrado con éxito!!' }  );
-        }
-    } );
+    await Barbero.findOneAndDelete( id );
+    
 } );
 
 //Json con la barberia de id
 router.get( '/barberia/:id', async ( req, res ) => {
     const { id } = req.params;
     const barberia = await Barberia.find( { admin: id } );
+    res.json( barberia );
+} );
+
+//Json con la barberia de id de barberia
+router.get( '/barberiaid/:id', async ( req, res ) => {
+    const { id } = req.params;
+    const barberia = await Barberia.find( { _id: id } );
     res.json( barberia );
 } );
 
