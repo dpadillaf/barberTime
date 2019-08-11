@@ -23,7 +23,7 @@ router.post( '/busqueda', async ( req, res ) => {
 
 //Json barberos de idBarberia
 router.get( '/barberos/:idBarberia', async ( req, res ) => {
-    const { idBarberia } = req.param;
+    const { idBarberia } = req.params;
     console.log( req.param )
     const barberos = await Barbero.find( { barberia: idBarberia } );
     console.log(barberos);

@@ -8,7 +8,7 @@ const CitaSchema = new Schema( {
     barbero: String,
     estado: Boolean,
     fecha: Date,
-    hora: Number,
+    hora: String,
     turno: Number
 } );
 
