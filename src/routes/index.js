@@ -153,12 +153,12 @@ router.get( '/barberiaid/:id', async ( req, res ) => {
 
 //atiende una cita con el id
 router.post( '/atendercita', async ( req, res ) => {
-    const { id } = req.param;
-    Cita.update( { '_id': id }, { 'estado': true }, function( err ){ 
+    const { id } = req.body;
+    Cita.updateOne( { '_id': id }, { $set: { 'estado': true } }, function( err ){ 
         if ( err ){
             res.send( err );
         }else{
-            res.json( 'msj': "Cita atendida!" );
+            res.json( { 'msj': "Cita atendida!" } );
         }
      } );
 } );
