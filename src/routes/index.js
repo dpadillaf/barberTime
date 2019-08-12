@@ -137,6 +137,13 @@ router.get( '/barberia/:id', async ( req, res ) => {
     res.json( barberia );
 } );
 
+//Json con la cita de id
+router.get( '/cita/:id', async ( req, res ) => {
+    const { id } = req.params;
+    const cita = await Cita.find( { _id: id } );
+    res.json( cita );
+} );
+
 //Json con la barberia de id de barberia
 router.get( '/barberiaid/:id', async ( req, res ) => {
     const { id } = req.params;
@@ -147,11 +154,11 @@ router.get( '/barberiaid/:id', async ( req, res ) => {
 //atiende una cita con el id
 router.post( '/atendercita', async ( req, res ) => {
     const { id } = req.param;
-    Cita.update( { '_id': id }, { 'estado': true }, function( err, cita ){ 
+    Cita.update( { '_id': id }, { 'estado': true }, function( err ){ 
         if ( err ){
             res.send( err );
         }else{
-            res.json( cita );
+            res.json( 'msj': "Cita atendida!" );
         }
      } );
 } );
