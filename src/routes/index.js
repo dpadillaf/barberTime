@@ -151,7 +151,7 @@ router.post( '/atendercita', async ( req, res ) => {
         if ( err ){
             res.send( err );
         }else{
-            res.json( { 'msj': cita } );
+            res.json( cita );
         }
      } );
 } );
