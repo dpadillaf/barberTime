@@ -39,6 +39,7 @@ router.get( '/citas/:idBarberia', async ( req, res ) => {
 
 //Json citas de idBarbero
 router.get( '/citas/:idBarbero', async ( req, res ) => {
+    const { idBarbero } = req.params;
     const citas = await Cita.find( { barbero: idBarbero } );
     res.json( citas );
 } );
